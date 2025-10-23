@@ -460,6 +460,7 @@ if Mix.env() in [:dev, :test] do
 
       description = nodes |> Floki.find("p") |> hd() |> Floki.text()
 
+      IO.inspect([section.title, description])
       %{
         name: section.title,
         description: description,
@@ -500,20 +501,20 @@ if Mix.env() in [:dev, :test] do
 
     @result_type_re_list [
       ~r/Returns an (Array of \S+) objects/,
-      ~r/On success, a (\S+) object is returned/,
+      ~r/On success, a ([A-Z]\S+) object is returned/,
       ~r/(array of \S+) .+is returned/,
-      ~r/ (\S+) is returned/,
-      ~r/of a (\S+) object.$/,
-      ~r/Returns (\S+) on success/,
-      ~r/Returns the (\S+) of/,
-      ~r/Returns.+as (\S+) object/,
-      ~r/Returns.+as a (\S+) object/,
-      ~r/Returns.+as (\S+) on success/,
-      ~r/Returns a (\S+) object/,
-      ~r/returns a (\S+) object/,
+      ~r/ ([A-Z]\S+) is returned/,
+      ~r/of a ([A-Z]\S+) object.$/,
+      ~r/Returns ([A-Z]\S+) on success/,
+      ~r/Returns the ([A-Z]\S+) of/,
+      ~r/Returns.+as ([A-Z]\S+) object/,
+      ~r/Returns.+as a ([A-Z]\S+) object/,
+      ~r/Returns.+as ([A-Z]\S+) on success/,
+      ~r/Returns a ([A-Z]\S+) object/,
+      ~r/returns a ([A-Z]\S+) object/,
       # 此正则用于匹配 `editMessageText` 等更新消息相关的方法普遍存在的两个可能返回值
       ~r/\S+(\S) is returned/,
-      ~r/Returns.+ (\S+) on success/
+      ~r/Returns.+ ([A-Z]\S+) on success/
     ]
 
     def parse_method_returns(description, i \\ 0) do
@@ -546,6 +547,8 @@ if Mix.env() in [:dev, :test] do
       do: validate_type_titlecase(type, description)
 
     defp valide_returns(type, description), do: validate_type_titlecase(type, description)
+
+    # defp validate_type_titlecase("list", _description), do: :ok
 
     defp validate_type_titlecase(type, description) do
       if is_titlecase?(type) do
