@@ -45,7 +45,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "HTTPS URL to send updates to. Use an empty string to remove webhook integration",
+          "HTTPS URL to send updates to. Use an empty string to remove webhook integration.",
         name: :url,
         required: true,
         type: :string
@@ -150,14 +150,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -168,6 +168,13 @@ defmodule Telegex do
         name: :direct_messages_topic_id,
         required: false,
         type: :integer
+      },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the ephemeral message to send",
+        name: :ephemeral_message_parameters,
+        required: false,
+        type: Telegex.Type.EphemeralMessageParameters
       },
       %{
         description: "Text of the message to be sent, 1-4096 characters after entities parsing",
@@ -210,7 +217,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -237,7 +244,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -260,14 +267,14 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -281,7 +288,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the chat where the original message was sent (or channel username in the format @channelusername)",
+          "Unique identifier for the chat where the original message was sent (or username of the target bot, supergroup or channel in the format @username)",
         name: :from_chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -307,6 +314,13 @@ defmodule Telegex do
       },
       %{
         description:
+          "Unique identifier of the message effect to be added to the message; only available when forwarding to private chats",
+        name: :message_effect_id,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
           "A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only",
         name: :suggested_post_parameters,
         required: false,
@@ -324,18 +338,18 @@ defmodule Telegex do
 
   defmethod(
     "forwardMessages",
-    "Use this method to forward multiple messages of any kind. If some of the specified messages can't be found or forwarded, they are skipped. Service messages and messages with protected content can't be forwarded. Album grouping is kept for forwarded messages. On success, an array of MessageId of the sent messages is returned.",
+    "Use this method to forward multiple messages of any kind. If some of the specified messages can't be found or forwarded, they are skipped. Service messages and messages with protected content can't be forwarded. Album grouping is kept for forwarded messages. On success, an Array of MessageId of the sent messages is returned.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -349,7 +363,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the chat where the original messages were sent (or channel username in the format @channelusername)",
+          "Unique identifier for the chat where the original messages were sent (or username of the target bot, supergroup or channel in the format @username)",
         name: :from_chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -380,18 +394,18 @@ defmodule Telegex do
 
   defmethod(
     "copyMessage",
-    "Use this method to copy messages of any kind. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.",
+    "Use this method to copy messages of any kind. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_ids is known to the bot. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -405,7 +419,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the chat where the original message was sent (or channel username in the format @channelusername)",
+          "Unique identifier for the chat where the original message was sent (or username of the target bot, supergroup or channel in the format @username)",
         name: :from_chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -424,7 +438,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "New caption for media, 0-1024 characters after entities parsing. If not specified, the original caption is kept",
+          "New caption for media, 0-1024 characters after entities parsing. If not specified, the original caption is kept.",
         name: :caption,
         required: false,
         type: :string
@@ -445,7 +459,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True, if the caption must be shown above the message media. Ignored if a new caption isn't specified.",
+          "Pass True if the caption must be shown above the message media. Ignored if a new caption isn't specified.",
         name: :show_caption_above_media,
         required: false,
         type: :boolean
@@ -465,10 +479,17 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
+      },
+      %{
+        description:
+          "Unique identifier of the message effect to be added to the message; only available when copying to private chats",
+        name: :message_effect_id,
+        required: false,
+        type: :string
       },
       %{
         description:
@@ -485,7 +506,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -504,18 +525,18 @@ defmodule Telegex do
 
   defmethod(
     "copyMessages",
-    "Use this method to copy messages of any kind. If some of the specified messages can't be found or copied, they are skipped. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessages, but the copied messages don't have a link to the original message. Album grouping is kept for copied messages. On success, an array of MessageId of the sent messages is returned.",
+    "Use this method to copy messages of any kind. If some of the specified messages can't be found or copied, they are skipped. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_ids is known to the bot. The method is analogous to the method forwardMessages, but the copied messages don't have a link to the original message. Album grouping is kept for copied messages. On success, an Array of MessageId of the sent messages is returned.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -529,7 +550,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the chat where the original messages were sent (or channel username in the format @channelusername)",
+          "Unique identifier for the chat where the original messages were sent (or username of the target bot, supergroup or channel in the format @username)",
         name: :from_chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -577,14 +598,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -595,6 +616,13 @@ defmodule Telegex do
         name: :direct_messages_topic_id,
         required: false,
         type: :integer
+      },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the ephemeral message to send",
+        name: :ephemeral_message_parameters,
+        required: false,
+        type: Telegex.Type.EphemeralMessageParameters
       },
       %{
         description:
@@ -628,7 +656,7 @@ defmodule Telegex do
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
-        description: "Pass True, if the caption must be shown above the message media",
+        description: "Pass True if the caption must be shown above the message media",
         name: :show_caption_above_media,
         required: false,
         type: :boolean
@@ -654,7 +682,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -681,7 +709,158 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
+        name: :reply_markup,
+        required: false,
+        type: %{
+          __struct__: Telegex.TypeDefiner.UnionType,
+          types: [
+            Telegex.Type.InlineKeyboardMarkup,
+            Telegex.Type.ReplyKeyboardMarkup,
+            Telegex.Type.ReplyKeyboardRemove,
+            Telegex.Type.ForceReply
+          ]
+        }
+      }
+    ],
+    Telegex.Type.Message
+  )
+
+  defmethod(
+    "sendLivePhoto",
+    "Use this method to send live photos. On success, the sent Message is returned.",
+    [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+        name: :chat_id,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description:
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
+        name: :message_thread_id,
+        required: false,
+        type: :integer
+      },
+      %{
+        description:
+          "Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat",
+        name: :direct_messages_topic_id,
+        required: false,
+        type: :integer
+      },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the ephemeral message to send",
+        name: :ephemeral_message_parameters,
+        required: false,
+        type: Telegex.Type.EphemeralMessageParameters
+      },
+      %{
+        description:
+          "Live photo video to send. The video must be no longer than 10 seconds and must not exceed 10 MB in size. Pass a file_id as String to send a video that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending live photos by a URL is currently unsupported.",
+        name: :live_photo,
+        required: true,
+        type: %{
+          __struct__: Telegex.TypeDefiner.UnionType,
+          types: [Telegex.Type.InputFile, :string]
+        }
+      },
+      %{
+        description:
+          "The static photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending live photos by a URL is currently unsupported.",
+        name: :photo,
+        required: true,
+        type: %{
+          __struct__: Telegex.TypeDefiner.UnionType,
+          types: [Telegex.Type.InputFile, :string]
+        }
+      },
+      %{
+        description:
+          "Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing",
+        name: :caption,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "Mode for parsing entities in the video caption. See formatting options for more details.",
+        name: :parse_mode,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode",
+        name: :caption_entities,
+        required: false,
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
+      },
+      %{
+        description: "Pass True if the caption must be shown above the message media",
+        name: :show_caption_above_media,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description: "Pass True if the video needs to be covered with a spoiler animation",
+        name: :has_spoiler,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Sends the message silently. Users will receive a notification with no sound.",
+        name: :disable_notification,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description: "Protects the contents of the sent message from forwarding and saving",
+        name: :protect_content,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
+        name: :allow_paid_broadcast,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.",
+        name: :suggested_post_parameters,
+        required: false,
+        type: Telegex.Type.SuggestedPostParameters
+      },
+      %{
+        description: "Description of the message to reply to",
+        name: :reply_parameters,
+        required: false,
+        type: Telegex.Type.ReplyParameters
+      },
+      %{
+        description:
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -711,14 +890,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -729,6 +908,13 @@ defmodule Telegex do
         name: :direct_messages_topic_id,
         required: false,
         type: :integer
+      },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the ephemeral message to send",
+        name: :ephemeral_message_parameters,
+        required: false,
+        type: Telegex.Type.EphemeralMessageParameters
       },
       %{
         description:
@@ -793,7 +979,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -820,7 +1006,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -850,14 +1036,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -868,6 +1054,13 @@ defmodule Telegex do
         name: :direct_messages_topic_id,
         required: false,
         type: :integer
+      },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the ephemeral message to send",
+        name: :ephemeral_message_parameters,
+        required: false,
+        type: Telegex.Type.EphemeralMessageParameters
       },
       %{
         description:
@@ -932,7 +1125,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -959,7 +1152,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -989,14 +1182,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -1007,6 +1200,13 @@ defmodule Telegex do
         name: :direct_messages_topic_id,
         required: false,
         type: :integer
+      },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the ephemeral message to send",
+        name: :ephemeral_message_parameters,
+        required: false,
+        type: Telegex.Type.EphemeralMessageParameters
       },
       %{
         description:
@@ -1074,7 +1274,7 @@ defmodule Telegex do
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
-        description: "Pass True, if the caption must be shown above the message media",
+        description: "Pass True if the caption must be shown above the message media",
         name: :show_caption_above_media,
         required: false,
         type: :boolean
@@ -1106,7 +1306,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -1133,7 +1333,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1163,14 +1363,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -1181,6 +1381,13 @@ defmodule Telegex do
         name: :direct_messages_topic_id,
         required: false,
         type: :integer
+      },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the ephemeral message to send",
+        name: :ephemeral_message_parameters,
+        required: false,
+        type: Telegex.Type.EphemeralMessageParameters
       },
       %{
         description:
@@ -1232,7 +1439,7 @@ defmodule Telegex do
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
-        description: "Pass True, if the caption must be shown above the message media",
+        description: "Pass True if the caption must be shown above the message media",
         name: :show_caption_above_media,
         required: false,
         type: :boolean
@@ -1258,7 +1465,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -1285,7 +1492,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1315,14 +1522,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -1333,6 +1540,13 @@ defmodule Telegex do
         name: :direct_messages_topic_id,
         required: false,
         type: :integer
+      },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the ephemeral message to send",
+        name: :ephemeral_message_parameters,
+        required: false,
+        type: Telegex.Type.EphemeralMessageParameters
       },
       %{
         description:
@@ -1385,7 +1599,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -1412,7 +1626,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1431,7 +1645,7 @@ defmodule Telegex do
 
   defmethod(
     "sendVideoNote",
-    "As of v.4.0, Telegram clients support rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned.",
+    "Use this method to send a rounded square MPEG4 video of up to 1 minute long. On success, the sent Message is returned.",
     [
       %{
         description:
@@ -1442,14 +1656,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -1463,7 +1677,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending video notes by a URL is currently unsupported",
+          "A JSON-serialized object containing the parameters of the ephemeral message to send",
+        name: :ephemeral_message_parameters,
+        required: false,
+        type: Telegex.Type.EphemeralMessageParameters
+      },
+      %{
+        description:
+          "Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending video notes by a URL is currently unsupported.",
         name: :video_note,
         required: true,
         type: %{
@@ -1508,7 +1729,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -1535,7 +1756,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1565,14 +1786,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername). If the chat is a channel, all Telegram Star proceeds from this media will be credited to the chat's balance. Otherwise, they will be credited to the bot's balance.",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username. If the chat is a channel, all Telegram Star proceeds from this media will be credited to the chat's balance. Otherwise, they will be credited to the bot's balance.",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -1586,13 +1807,13 @@ defmodule Telegex do
       },
       %{
         description:
-          "The number of Telegram Stars that must be paid to buy access to the media; 1-10000",
+          "The number of Telegram Stars that must be paid to buy access to the media; 1-25000",
         name: :star_count,
         required: true,
         type: :integer
       },
       %{
-        description: "A JSON-serialized array describing the media to be sent; up to 10 items",
+        description: "A JSON-serialized Array describing the media to be sent; up to 10 items",
         name: :media,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.InputPaidMedia}
@@ -1625,7 +1846,7 @@ defmodule Telegex do
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
-        description: "Pass True, if the caption must be shown above the message media",
+        description: "Pass True if the caption must be shown above the message media",
         name: :show_caption_above_media,
         required: false,
         type: :boolean
@@ -1645,7 +1866,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -1665,7 +1886,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1684,7 +1905,7 @@ defmodule Telegex do
 
   defmethod(
     "sendMediaGroup",
-    "Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Message objects that were sent is returned.",
+    "Use this method to send a group of photos, live photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an Array of Message objects that were sent is returned.",
     [
       %{
         description:
@@ -1695,14 +1916,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -1716,7 +1937,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "A JSON-serialized array describing messages to be sent, must include 2-10 items",
+          "A JSON-serialized Array describing messages to be sent, must include 2-10 items",
         name: :media,
         required: true,
         type: %{
@@ -1726,6 +1947,10 @@ defmodule Telegex do
             %{
               __struct__: Telegex.TypeDefiner.ArrayType,
               elem_type: Telegex.Type.InputMediaDocument
+            },
+            %{
+              __struct__: Telegex.TypeDefiner.ArrayType,
+              elem_type: Telegex.Type.InputMediaLivePhoto
             },
             %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.InputMediaPhoto},
             %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.InputMediaVideo}
@@ -1746,7 +1971,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -1781,14 +2006,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -1800,6 +2025,13 @@ defmodule Telegex do
         required: false,
         type: :integer
       },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the ephemeral message to send",
+        name: :ephemeral_message_parameters,
+        required: false,
+        type: Telegex.Type.EphemeralMessageParameters
+      },
       %{description: "Latitude of the location", name: :latitude, required: true, type: :float},
       %{description: "Longitude of the location", name: :longitude, required: true, type: :float},
       %{
@@ -1810,7 +2042,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Period in seconds during which the location will be updated (see Live Locations, should be between 60 and 86400, or 0x7FFFFFFF for live locations that can be edited indefinitely.",
+          "Period in seconds during which the location will be updated (see Live Locations), must be between 60 and 86400, or 0x7FFFFFFF for live locations that can be edited indefinitely. Must be 0 for ephemeral messages.",
         name: :live_period,
         required: false,
         type: :integer
@@ -1844,7 +2076,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -1871,7 +2103,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1901,14 +2133,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -1919,6 +2151,13 @@ defmodule Telegex do
         name: :direct_messages_topic_id,
         required: false,
         type: :integer
+      },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the ephemeral message to send",
+        name: :ephemeral_message_parameters,
+        required: false,
+        type: Telegex.Type.EphemeralMessageParameters
       },
       %{description: "Latitude of the venue", name: :latitude, required: true, type: :float},
       %{description: "Longitude of the venue", name: :longitude, required: true, type: :float},
@@ -1964,7 +2203,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -1991,7 +2230,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -2021,14 +2260,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -2039,6 +2278,13 @@ defmodule Telegex do
         name: :direct_messages_topic_id,
         required: false,
         type: :integer
+      },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the ephemeral message to send",
+        name: :ephemeral_message_parameters,
+        required: false,
+        type: Telegex.Type.EphemeralMessageParameters
       },
       %{
         description: "Contact's phone number",
@@ -2069,7 +2315,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -2096,7 +2342,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -2126,14 +2372,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername). Polls can't be sent to channel direct messages chats.",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username. Polls can't be sent to channel direct messages chats.",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -2146,20 +2392,20 @@ defmodule Telegex do
       },
       %{
         description:
-          "Mode for parsing entities in the question. See formatting options for more details. Currently, only custom emoji entities are allowed",
+          "Mode for parsing entities in the question. See formatting options for more details. Currently, only custom emoji entities are allowed.",
         name: :question_parse_mode,
         required: false,
         type: :string
       },
       %{
         description:
-          "A JSON-serialized list of special entities that appear in the poll question. It can be specified instead of question_parse_mode",
+          "A JSON-serialized list of special entities that appear in the poll question. It can be specified instead of question_parse_mode.",
         name: :question_entities,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
-        description: "A JSON-serialized list of 2-12 answer options",
+        description: "A JSON-serialized list of 1-12 answer options",
         name: :options,
         required: true,
         type: %{
@@ -2180,18 +2426,57 @@ defmodule Telegex do
         type: :string
       },
       %{
-        description:
-          "True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False",
+        description: "Pass True if the poll allows multiple answers, defaults to False",
         name: :allows_multiple_answers,
         required: false,
         type: :boolean
       },
       %{
         description:
-          "0-based identifier of the correct answer option, required for polls in quiz mode",
-        name: :correct_option_id,
+          "Pass True if the poll allows to change chosen answer options, defaults to False for quizzes and to True for regular polls",
+        name: :allows_revoting,
         required: false,
-        type: :integer
+        type: :boolean
+      },
+      %{
+        description: "Pass True if the poll options must be shown in random order",
+        name: :shuffle_options,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True if answer options can be added to the poll after creation; not supported for anonymous polls and quizzes",
+        name: :allow_adding_options,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description: "Pass True if poll results must be shown only after the poll closes",
+        name: :hide_results_until_closes,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True if voting is limited to users who have been members of the chat where the poll is being sent for more than 24 hours; for channel chats only",
+        name: :members_only,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "A JSON-serialized list of 0-12 two-letter ISO 3166-1 alpha-2 country codes indicating the countries from which users can vote in the poll; for channel chats only. Use “FT” as a country code to allow users with anonymous numbers to vote. If omitted or empty, then users from any country can participate in the poll.",
+        name: :country_codes,
+        required: false,
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :string}
+      },
+      %{
+        description:
+          "A JSON-serialized list of monotonically increasing 0-based identifiers of the correct answer options, required for polls in quiz mode",
+        name: :correct_option_ids,
+        required: false,
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :integer}
       },
       %{
         description:
@@ -2209,21 +2494,27 @@ defmodule Telegex do
       },
       %{
         description:
-          "A JSON-serialized list of special entities that appear in the poll explanation. It can be specified instead of explanation_parse_mode",
+          "A JSON-serialized list of special entities that appear in the poll explanation. It can be specified instead of explanation_parse_mode.",
         name: :explanation_entities,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
+        description: "Media added to the quiz explanation",
+        name: :explanation_media,
+        required: false,
+        type: Telegex.Type.InputPollMedia
+      },
+      %{
         description:
-          "Amount of time in seconds the poll will be active after creation, 5-600. Can't be used together with close_date.",
+          "Amount of time in seconds the poll will be active after creation, 5-2628000. Can't be used together with close_date.",
         name: :open_period,
         required: false,
         type: :integer
       },
       %{
         description:
-          "Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 600 seconds in the future. Can't be used together with open_period.",
+          "Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 2628000 seconds in the future. Can't be used together with open_period.",
         name: :close_date,
         required: false,
         type: :integer
@@ -2234,6 +2525,33 @@ defmodule Telegex do
         name: :is_closed,
         required: false,
         type: :boolean
+      },
+      %{
+        description:
+          "Description of the poll to be sent, 0-1024 characters after entities parsing",
+        name: :description,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "Mode for parsing entities in the poll description. See formatting options for more details.",
+        name: :description_parse_mode,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "A JSON-serialized list of special entities that appear in the poll description, which can be specified instead of description_parse_mode",
+        name: :description_entities,
+        required: false,
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
+      },
+      %{
+        description: "Media added to the poll description",
+        name: :media,
+        required: false,
+        type: Telegex.Type.InputPollMedia
       },
       %{
         description:
@@ -2250,7 +2568,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -2270,7 +2588,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -2299,10 +2617,11 @@ defmodule Telegex do
         type: :string
       },
       %{
-        description: "Unique identifier for the target chat",
+        description:
+          "Unique identifier for the target chat or username of the target bot in the format @username",
         name: :chat_id,
         required: true,
-        type: :integer
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description: "A JSON-serialized object for the checklist to send",
@@ -2358,14 +2677,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -2379,7 +2698,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Emoji on which the dice throw animation is based. Currently, must be one of “”, “”, “”, “”, “”, or “”. Dice can have values 1-6 for “”, “” and “”, values 1-5 for “” and “”, and values 1-64 for “”. Defaults to “”",
+          "Emoji on which the dice throw animation is based. Currently, must be one of “”, “”, “”, “”, “”, or “”. Dice can have values 1-6 for “”, “” and “”, values 1-5 for “” and “”, and values 1-64 for “”. Defaults to “”.",
         name: :emoji,
         required: false,
         type: :string
@@ -2399,7 +2718,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -2426,7 +2745,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -2444,6 +2763,68 @@ defmodule Telegex do
   )
 
   defmethod(
+    "sendMessageDraft",
+    "Use this method to stream a partial message to a user while the message is being generated. Note that the streamed draft is ephemeral and acts as a temporary 30-second preview - once the output is finalized, you must call sendMessage with the complete message to persist it in the user's chat. Returns True on success.",
+    [
+      %{
+        description: "Unique identifier for the target private chat",
+        name: :chat_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "Unique identifier for the target message thread",
+        name: :message_thread_id,
+        required: false,
+        type: :integer
+      },
+      %{
+        description:
+          "Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated. Otherwise, the draft is replaced without animation.",
+        name: :draft_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description:
+          "Text of the message to be sent, 0-4096 characters after entities parsing. Pass an empty text to show a “Thinking…” placeholder.",
+        name: :text,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "Mode for parsing entities in the message text. See formatting options for more details.",
+        name: :parse_mode,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode",
+        name: :entities,
+        required: false,
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
+      },
+      %{
+        description:
+          "Pass True to show the user a button to stop further drafts. The bot will receive an Update “stopped_message_generation” if the user presses the button.",
+        name: :can_stop,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to keep the draft in the chat when the button is pressed. The draft will still disappear after a short time or if the bot sends a message. To fully preserve the partial draft, the bot should send it as a new message.",
+        name: :keep_on_stop,
+        required: false,
+        type: :boolean
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
     "sendChatAction",
     "Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.",
     [
@@ -2456,13 +2837,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername). Channel chats and channel direct messages chats aren't supported.",
+          "Unique identifier for the target chat or username of the target bot or supergroup in the format @username. Channel chats and channel direct messages chats aren't supported.",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
-        description: "Unique identifier for the target message thread; for supergroups only",
+        description:
+          "Unique identifier for the target message thread or topic of a forum; for supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -2484,7 +2866,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -2542,6 +2924,34 @@ defmodule Telegex do
   )
 
   defmethod(
+    "getUserProfileAudios",
+    "Use this method to get a list of profile audios for a user. Returns a UserProfileAudios object.",
+    [
+      %{
+        description: "Unique identifier of the target user",
+        name: :user_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description:
+          "Sequential number of the first audio to be returned. By default, all audios are returned.",
+        name: :offset,
+        required: false,
+        type: :integer
+      },
+      %{
+        description:
+          "Limits the number of audios to be retrieved. Values between 1-100 are accepted. Defaults to 100.",
+        name: :limit,
+        required: false,
+        type: :integer
+      }
+    ],
+    Telegex.Type.UserProfileAudios
+  )
+
+  defmethod(
     "setUserEmojiStatus",
     "Changes the emoji status for a given user that previously allowed the bot to manage their emoji status via the Mini App method requestEmojiStatusAccess. Returns True on success.",
     [
@@ -2588,7 +2998,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target group or username of the target supergroup or channel (in the format @channelusername)",
+          "Unique identifier for the target group or username of the target supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -2623,7 +3033,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target group or username of the target supergroup or channel (in the format @channelusername)",
+          "Unique identifier for the target group or username of the target supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -2650,7 +3060,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -2676,7 +3086,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Date when restrictions will be lifted for the user; Unix time. If user is restricted for more than 366 days or less than 30 seconds from the current time, they are considered to be restricted forever",
+          "Date when restrictions will be lifted for the user; Unix time. If user is restricted for more than 366 days or less than 30 seconds from the current time, they are considered to be restricted forever.",
         name: :until_date,
         required: false,
         type: :integer
@@ -2691,7 +3101,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -2729,7 +3139,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True if the administrator can restrict, ban or unban chat members, or access supergroup statistics",
+          "Pass True if the administrator can restrict, ban or unban chat members, or access supergroup statistics. For backward compatibility, defaults to True for promotions of channel administrators.",
         name: :can_restrict_members,
         required: false,
         type: :boolean
@@ -2806,6 +3216,20 @@ defmodule Telegex do
         name: :can_manage_direct_messages,
         required: false,
         type: :boolean
+      },
+      %{
+        description:
+          "Pass True if the administrator can edit the tags of regular members; for groups and supergroups only",
+        name: :can_manage_tags,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True if the administrator can manage chat welcome messages or directly send them in the case of bots",
+        name: :can_send_welcome_messages,
+        required: false,
+        type: :boolean
       }
     ],
     :boolean
@@ -2817,7 +3241,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -2840,12 +3264,39 @@ defmodule Telegex do
   )
 
   defmethod(
+    "setChatMemberTag",
+    "Use this method to set a tag for a regular member in a group or a supergroup. The bot must be an administrator in the chat for this to work and must have the can_manage_tags administrator right. Returns True on success.",
+    [
+      %{
+        description:
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
+        name: :chat_id,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description: "Unique identifier of the target user",
+        name: :user_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "New tag for the member; 0-16 characters, emoji are not allowed",
+        name: :tag,
+        required: false,
+        type: :string
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
     "banChatSenderChat",
     "Use this method to ban a channel chat in a supergroup or a channel. Until the chat is unbanned, the owner of the banned chat won't be able to send messages on behalf of any of their channels. The bot must be an administrator in the supergroup or channel for this to work and must have the appropriate administrator rights. Returns True on success.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -2866,7 +3317,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -2887,7 +3338,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -2915,7 +3366,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -2930,7 +3381,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -2956,7 +3407,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified",
+          "True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified.",
         name: :creates_join_request,
         required: false,
         type: :boolean
@@ -2971,7 +3422,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3003,7 +3454,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified",
+          "True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified.",
         name: :creates_join_request,
         required: false,
         type: :boolean
@@ -3018,7 +3469,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target channel chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target channel chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3053,7 +3504,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3080,7 +3531,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier of the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier of the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3101,7 +3552,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3122,7 +3573,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3138,12 +3589,54 @@ defmodule Telegex do
   )
 
   defmethod(
+    "answerChatJoinRequestQuery",
+    "Use this method to process a received chat join request query. Returns True on success.",
+    [
+      %{
+        description: "Unique identifier of the join request query",
+        name: :chat_join_request_query_id,
+        required: true,
+        type: :string
+      },
+      %{
+        description:
+          "Result of the query. Must be either “approve” to allow the user to join the chat, “decline” to disallow the user to join the chat, or “queue” to leave the decision to other administrators.",
+        name: :result,
+        required: true,
+        type: :string
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
+    "sendChatJoinRequestWebApp",
+    "Use this method to process a received chat join request query by showing a Mini App to the user before deciding the outcome. Call answerChatJoinRequestQuery to resolve the join request query based on the user interaction with the Mini App. Returns True on success.",
+    [
+      %{
+        description: "Unique identifier of the join request query",
+        name: :chat_join_request_query_id,
+        required: true,
+        type: :string
+      },
+      %{
+        description:
+          "An HTTPS URL of a Web App to be opened with additional data as specified in Initializing Web Apps",
+        name: :web_app_url,
+        required: true,
+        type: :string
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
     "setChatPhoto",
     "Use this method to set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns True on success.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3164,7 +3657,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3179,7 +3672,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3200,7 +3693,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3228,7 +3721,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3263,7 +3756,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3285,7 +3778,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3300,7 +3793,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername). Channel direct messages chats aren't supported; leave the corresponding channel instead.",
+          "Unique identifier for the target chat or username of the target supergroup or channel in the format @username. Channel direct messages chats aren't supported; leave the corresponding channel instead.",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3315,7 +3808,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3326,14 +3819,21 @@ defmodule Telegex do
 
   defmethod(
     "getChatAdministrators",
-    "Use this method to get a list of administrators in a chat, which aren't bots. Returns an Array of ChatMember objects.",
+    "Use this method to get a list of administrators in a chat. Returns an Array of ChatMember objects.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description:
+          "Pass True to additionally receive all bots that are administrators of the chat. By default, bots other than the current bot are omitted.",
+        name: :return_bots,
+        required: false,
+        type: :boolean
       }
     ],
     %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.ChatMember}
@@ -3341,11 +3841,11 @@ defmodule Telegex do
 
   defmethod(
     "getChatMemberCount",
-    "Use this method to get the number of members in a chat. Returns Int on success.",
+    "Use this method to get the number of members in a chat. Returns Integer on success.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3360,7 +3860,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3376,12 +3876,32 @@ defmodule Telegex do
   )
 
   defmethod(
+    "getUserPersonalChatMessages",
+    "Use this method to get the last messages from the personal chat (i.e., the chat currently added to their profile) of a given user. On success, an Array of Message objects is returned.",
+    [
+      %{
+        description: "Unique identifier for the target user",
+        name: :user_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "The maximum number of messages to return; 1-20",
+        name: :limit,
+        required: true,
+        type: :integer
+      }
+    ],
+    %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.Message}
+  )
+
+  defmethod(
     "setChatStickerSet",
     "Use this method to set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3402,7 +3922,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3420,11 +3940,11 @@ defmodule Telegex do
 
   defmethod(
     "createForumTopic",
-    "Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns information about the created topic as a ForumTopic object.",
+    "Use this method to create a topic in a forum supergroup chat or a private chat with a user. In the case of a supergroup chat the bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator right. Returns information about the created topic as a ForumTopic object.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3432,7 +3952,7 @@ defmodule Telegex do
       %{description: "Topic name, 1-128 characters", name: :name, required: true, type: :string},
       %{
         description:
-          "Color of the topic icon in RGB format. Currently, must be one of 7322096 (0x6FB9F0), 16766590 (0xFFD67E), 13338331 (0xCB86DB), 9367192 (0x8EEE98), 16749490 (0xFF93B2), or 16478047 (0xFB6F5F)",
+          "Color of the topic icon in RGB format. Currently, must be one of 7322096 (0x6FB9F0), 16766590 (0xFFD67E), 13338331 (0xCB86DB), 9367192 (0x8EEE98), 16749490 (0xFF93B2), or 16478047 (0xFB6F5F).",
         name: :icon_color,
         required: false,
         type: :integer
@@ -3450,11 +3970,11 @@ defmodule Telegex do
 
   defmethod(
     "editForumTopic",
-    "Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.",
+    "Use this method to edit name and icon of a topic in a forum supergroup chat or a private chat with a user. In the case of a supergroup chat the bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3467,14 +3987,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "New topic name, 0-128 characters. If not specified or empty, the current name of the topic will be kept",
+          "New topic name, 0-128 characters. If not specified or empty, the current name of the topic will be kept.",
         name: :name,
         required: false,
         type: :string
       },
       %{
         description:
-          "New unique identifier of the custom emoji shown as the topic icon. Use getForumTopicIconStickers to get all allowed custom emoji identifiers. Pass an empty string to remove the icon. If not specified, the current icon will be kept",
+          "New unique identifier of the custom emoji shown as the topic icon. Use getForumTopicIconStickers to get all allowed custom emoji identifiers. Pass an empty string to remove the icon. If not specified, the current icon will be kept.",
         name: :icon_custom_emoji_id,
         required: false,
         type: :string
@@ -3489,7 +4009,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3510,7 +4030,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3527,11 +4047,11 @@ defmodule Telegex do
 
   defmethod(
     "deleteForumTopic",
-    "Use this method to delete a forum topic along with all its messages in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_delete_messages administrator rights. Returns True on success.",
+    "Use this method to delete a forum topic along with all its messages in a forum supergroup chat or a private chat with a user. In the case of a supergroup chat the bot must be an administrator in the chat for this to work and must have the can_delete_messages administrator rights. Returns True on success.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3548,11 +4068,11 @@ defmodule Telegex do
 
   defmethod(
     "unpinAllForumTopicMessages",
-    "Use this method to clear the list of pinned messages in a forum topic. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.",
+    "Use this method to clear the list of pinned messages in a forum topic in a forum supergroup chat or a private chat with a user. In the case of a supergroup chat the bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3573,7 +4093,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3594,7 +4114,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3609,7 +4129,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3624,7 +4144,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3639,7 +4159,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3654,7 +4174,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3675,14 +4195,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters",
+          "Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters.",
         name: :text,
         required: false,
         type: :string
       },
       %{
         description:
-          "If True, an alert will be shown by the client instead of a notification at the top of the chat screen. Defaults to false.",
+          "If True, an alert will be shown by the client instead of a notification at the top of the chat screen. Defaults to False.",
         name: :show_alert,
         required: false,
         type: :boolean
@@ -3696,7 +4216,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "The maximum amount of time in seconds that the result of the callback query may be cached client-side. Telegram apps will support caching starting in version 3.14. Defaults to 0.",
+          "The maximum amount of time in seconds that the result of the callback query may be cached client-side. Defaults to 0.",
         name: :cache_time,
         required: false,
         type: :integer
@@ -3706,12 +4226,32 @@ defmodule Telegex do
   )
 
   defmethod(
+    "answerGuestQuery",
+    "Use this method to reply to a received guest message. On success, a SentGuestMessage object is returned.",
+    [
+      %{
+        description: "Unique identifier for the query to be answered",
+        name: :guest_query_id,
+        required: true,
+        type: :string
+      },
+      %{
+        description: "A JSON-serialized object describing the message to be sent",
+        name: :result,
+        required: true,
+        type: Telegex.Type.InlineQueryResult
+      }
+    ],
+    Telegex.Type.SentGuestMessage
+  )
+
+  defmethod(
     "getUserChatBoosts",
     "Use this method to get the list of boosts added to a chat by a user. Requires administrator rights in the chat. Returns a UserChatBoosts object.",
     [
       %{
         description:
-          "Unique identifier for the chat or username of the channel (in the format @channelusername)",
+          "Unique identifier for the chat or username of the channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -3741,6 +4281,76 @@ defmodule Telegex do
   )
 
   defmethod(
+    "getManagedBotToken",
+    "Use this method to get the token of a managed bot. Returns the token as String on success.",
+    [
+      %{
+        description: "User identifier of the managed bot whose token will be returned",
+        name: :user_id,
+        required: true,
+        type: :integer
+      }
+    ],
+    :string
+  )
+
+  defmethod(
+    "replaceManagedBotToken",
+    "Use this method to revoke the current token of a managed bot and generate a new one. Returns the new token as String on success.",
+    [
+      %{
+        description: "User identifier of the managed bot whose token will be replaced",
+        name: :user_id,
+        required: true,
+        type: :integer
+      }
+    ],
+    :string
+  )
+
+  defmethod(
+    "getManagedBotAccessSettings",
+    "Use this method to get the access settings of a managed bot. Returns a BotAccessSettings object on success.",
+    [
+      %{
+        description: "User identifier of the managed bot whose access settings will be returned",
+        name: :user_id,
+        required: true,
+        type: :integer
+      }
+    ],
+    Telegex.Type.BotAccessSettings
+  )
+
+  defmethod(
+    "setManagedBotAccessSettings",
+    "Use this method to change the access settings of a managed bot. Returns True on success.",
+    [
+      %{
+        description: "User identifier of the managed bot whose access settings will be changed",
+        name: :user_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description:
+          "Pass True if only selected users can access the bot. The bot's owner can always access it.",
+        name: :is_access_restricted,
+        required: true,
+        type: :boolean
+      },
+      %{
+        description:
+          "A JSON-serialized list of up to 10 identifiers of users who will have access to the bot in addition to its owner. Ignored if is_access_restricted is False.",
+        name: :added_user_ids,
+        required: false,
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :integer}
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
     "setMyCommands",
     "Use this method to change the list of the bot's commands. See this manual for more details about bot commands. Returns True on success.",
     [
@@ -3760,7 +4370,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given scope, for whose language there are no dedicated commands",
+          "A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given scope, for whose language there are no dedicated commands.",
         name: :language_code,
         required: false,
         type: :string
@@ -3782,7 +4392,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given scope, for whose language there are no dedicated commands",
+          "A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given scope, for whose language there are no dedicated commands.",
         name: :language_code,
         required: false,
         type: :string
@@ -3921,19 +4531,40 @@ defmodule Telegex do
   )
 
   defmethod(
+    "setMyProfilePhoto",
+    "Changes the profile photo of the bot. Returns True on success.",
+    [
+      %{
+        description: "The new profile photo to set",
+        name: :photo,
+        required: true,
+        type: Telegex.Type.InputProfilePhoto
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
+    "removeMyProfilePhoto",
+    "Removes the profile photo of the bot. Requires no parameters. Returns True on success.",
+    [],
+    :boolean
+  )
+
+  defmethod(
     "setChatMenuButton",
     "Use this method to change the bot's menu button in a private chat, or the default menu button. Returns True on success.",
     [
       %{
         description:
-          "Unique identifier for the target private chat. If not specified, default bot's menu button will be changed",
+          "Unique identifier for the target private chat. If not specified, the bot's default menu button will be changed.",
         name: :chat_id,
         required: false,
         type: :integer
       },
       %{
         description:
-          "A JSON-serialized object for the bot's new menu button. Defaults to MenuButtonDefault",
+          "A JSON-serialized object for the bot's new menu button. Defaults to MenuButtonDefault.",
         name: :menu_button,
         required: false,
         type: Telegex.Type.MenuButton
@@ -3948,7 +4579,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target private chat. If not specified, default bot's menu button will be returned",
+          "Unique identifier for the target private chat. If not specified, the bot's default menu button will be returned.",
         name: :chat_id,
         required: false,
         type: :integer
@@ -4014,12 +4645,17 @@ defmodule Telegex do
       },
       %{
         description:
-          "Required if user_id is not specified. Unique identifier for the chat or username of the channel (in the format @channelusername) that will receive the gift.",
+          "Required if user_id is not specified. Unique identifier for the chat or username of the channel (in the format @username) that will receive the gift.",
         name: :chat_id,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
-      %{description: "Identifier of the gift", name: :gift_id, required: true, type: :string},
+      %{
+        description: "Identifier of the gift; limited gifts can't be sent to channel chats",
+        name: :gift_id,
+        required: true,
+        type: :string
+      },
       %{
         description:
           "Pass True to pay for the gift upgrade from the bot's balance, thereby making the upgrade free for the receiver",
@@ -4035,14 +4671,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Mode for parsing entities in the text. See formatting options for more details. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.",
+          "Mode for parsing entities in the text. See formatting options for more details. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and “date_time” are ignored.",
         name: :text_parse_mode,
         required: false,
         type: :string
       },
       %{
         description:
-          "A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.",
+          "A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and “date_time” are ignored.",
         name: :text_entities,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
@@ -4085,14 +4721,14 @@ defmodule Telegex do
       },
       %{
         description:
-          "Mode for parsing entities in the text. See formatting options for more details. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.",
+          "Mode for parsing entities in the text. See formatting options for more details. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and “date_time” are ignored.",
         name: :text_parse_mode,
         required: false,
         type: :string
       },
       %{
         description:
-          "A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.",
+          "A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and “date_time” are ignored.",
         name: :text_entities,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
@@ -4128,7 +4764,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername). Channel direct messages chats can't be verified.",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username. Channel direct messages chats can't be verified.",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -4164,7 +4800,7 @@ defmodule Telegex do
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -4214,7 +4850,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "A JSON-serialized list of 1-100 identifiers of messages to delete. All messages must be from the same chat. See deleteMessage for limitations on which messages can be deleted",
+          "A JSON-serialized list of 1-100 identifiers of messages to delete. All messages must be from the same chat. See deleteMessage for limitations on which messages can be deleted.",
         name: :message_ids,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :integer}
@@ -4349,7 +4985,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True, if a button for sending a gift to the user or by the business account must always be shown in the input field",
+          "Pass True if a button for sending a gift to the user or by the business account must always be shown in the input field",
         name: :show_gift_button,
         required: true,
         type: :boolean
@@ -4428,14 +5064,29 @@ defmodule Telegex do
         type: :boolean
       },
       %{
-        description: "Pass True to exclude gifts that can be purchased a limited number of times",
-        name: :exclude_limited,
+        description:
+          "Pass True to exclude gifts that can be purchased a limited number of times and can be upgraded to unique",
+        name: :exclude_limited_upgradable,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to exclude gifts that can be purchased a limited number of times and can't be upgraded to unique",
+        name: :exclude_limited_non_upgradable,
         required: false,
         type: :boolean
       },
       %{
         description: "Pass True to exclude unique gifts",
         name: :exclude_unique,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to exclude gifts that were assigned from the TON blockchain and can't be resold or transferred in Telegram",
+        name: :exclude_from_blockchain,
         required: false,
         type: :boolean
       },
@@ -4454,7 +5105,158 @@ defmodule Telegex do
         type: :string
       },
       %{
-        description: "The maximum number of gifts to be returned; 1-100. Defaults to 100",
+        description: "The maximum number of gifts to be returned; 1-100. Defaults to 100.",
+        name: :limit,
+        required: false,
+        type: :integer
+      }
+    ],
+    Telegex.Type.OwnedGifts
+  )
+
+  defmethod(
+    "getUserGifts",
+    "Returns the gifts owned and hosted by a user. Returns OwnedGifts on success.",
+    [
+      %{
+        description: "Unique identifier of the user",
+        name: :user_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description:
+          "Pass True to exclude gifts that can be purchased an unlimited number of times",
+        name: :exclude_unlimited,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to exclude gifts that can be purchased a limited number of times and can be upgraded to unique",
+        name: :exclude_limited_upgradable,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to exclude gifts that can be purchased a limited number of times and can't be upgraded to unique",
+        name: :exclude_limited_non_upgradable,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to exclude gifts that were assigned from the TON blockchain and can't be resold or transferred in Telegram",
+        name: :exclude_from_blockchain,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description: "Pass True to exclude unique gifts",
+        name: :exclude_unique,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to sort results by gift price instead of send date. Sorting is applied before pagination.",
+        name: :sort_by_price,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Offset of the first entry to return as received from the previous request; use an empty string to get the first chunk of results",
+        name: :offset,
+        required: false,
+        type: :string
+      },
+      %{
+        description: "The maximum number of gifts to be returned; 1-100. Defaults to 100.",
+        name: :limit,
+        required: false,
+        type: :integer
+      }
+    ],
+    Telegex.Type.OwnedGifts
+  )
+
+  defmethod(
+    "getChatGifts",
+    "Returns the gifts owned by a chat. Returns OwnedGifts on success.",
+    [
+      %{
+        description:
+          "Unique identifier for the target chat or username of the target channel in the format @username",
+        name: :chat_id,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description:
+          "Pass True to exclude gifts that aren't saved to the chat's profile page. Always True, unless the bot has the can_post_messages administrator right in the channel.",
+        name: :exclude_unsaved,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to exclude gifts that are saved to the chat's profile page. Always False, unless the bot has the can_post_messages administrator right in the channel.",
+        name: :exclude_saved,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to exclude gifts that can be purchased an unlimited number of times",
+        name: :exclude_unlimited,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to exclude gifts that can be purchased a limited number of times and can be upgraded to unique",
+        name: :exclude_limited_upgradable,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to exclude gifts that can be purchased a limited number of times and can't be upgraded to unique",
+        name: :exclude_limited_non_upgradable,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to exclude gifts that were assigned from the TON blockchain and can't be resold or transferred in Telegram",
+        name: :exclude_from_blockchain,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description: "Pass True to exclude unique gifts",
+        name: :exclude_unique,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to sort results by gift price instead of send date. Sorting is applied before pagination.",
+        name: :sort_by_price,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Offset of the first entry to return as received from the previous request; use an empty string to get the first chunk of results",
+        name: :offset,
+        required: false,
+        type: :string
+      },
+      %{
+        description: "The maximum number of gifts to be returned; 1-100. Defaults to 100.",
         name: :limit,
         required: false,
         type: :integer
@@ -4620,6 +5422,53 @@ defmodule Telegex do
   )
 
   defmethod(
+    "repostStory",
+    "Reposts a story on behalf of a business account from another business account. Both business accounts must be managed by the same bot, and the story on the source account must have been posted (or reposted) by the bot. Requires the can_manage_stories business bot right for both business accounts. Returns Story on success.",
+    [
+      %{
+        description: "Unique identifier of the business connection",
+        name: :business_connection_id,
+        required: true,
+        type: :string
+      },
+      %{
+        description:
+          "Unique identifier of the chat which posted the story that should be reposted",
+        name: :from_chat_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "Unique identifier of the story that should be reposted",
+        name: :from_story_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description:
+          "Period after which the story is moved to the archive, in seconds; must be one of 6 * 3600, 12 * 3600, 86400, or 2 * 86400",
+        name: :active_period,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "Pass True to keep the story accessible after it expires",
+        name: :post_to_chat_page,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True if the content of the story must be protected from forwarding and screenshotting",
+        name: :protect_content,
+        required: false,
+        type: :boolean
+      }
+    ],
+    Telegex.Type.Story
+  )
+
+  defmethod(
     "editStory",
     "Edits a story previously posted by the bot on behalf of a managed business account. Requires the can_manage_stories business bot right. Returns Story on success.",
     [
@@ -4692,8 +5541,93 @@ defmodule Telegex do
   )
 
   defmethod(
+    "answerWebAppQuery",
+    "Use this method to set the result of an interaction with a Web App and send a corresponding message on behalf of the user to the chat from which the query originated. On success, a SentWebAppMessage object is returned.",
+    [
+      %{
+        description: "Unique identifier for the query to be answered",
+        name: :web_app_query_id,
+        required: true,
+        type: :string
+      },
+      %{
+        description: "A JSON-serialized object describing the message to be sent",
+        name: :result,
+        required: true,
+        type: Telegex.Type.InlineQueryResult
+      }
+    ],
+    Telegex.Type.SentWebAppMessage
+  )
+
+  defmethod(
+    "savePreparedInlineMessage",
+    "Stores a message that can be sent by a user of a Mini App. Returns a PreparedInlineMessage object.",
+    [
+      %{
+        description: "Unique identifier of the target user that can use the prepared message",
+        name: :user_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "A JSON-serialized object describing the message to be sent",
+        name: :result,
+        required: true,
+        type: Telegex.Type.InlineQueryResult
+      },
+      %{
+        description: "Pass True if the message can be sent to private chats with users",
+        name: :allow_user_chats,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description: "Pass True if the message can be sent to private chats with bots",
+        name: :allow_bot_chats,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description: "Pass True if the message can be sent to group and supergroup chats",
+        name: :allow_group_chats,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description: "Pass True if the message can be sent to channel chats",
+        name: :allow_channel_chats,
+        required: false,
+        type: :boolean
+      }
+    ],
+    Telegex.Type.PreparedInlineMessage
+  )
+
+  defmethod(
+    "savePreparedKeyboardButton",
+    "Stores a keyboard button that can be used by a user within a Mini App. Returns a PreparedKeyboardButton object.",
+    [
+      %{
+        description: "Unique identifier of the target user that can use the button",
+        name: :user_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description:
+          "A JSON-serialized object describing the button to be saved. The button must be of the type request_users, request_chat, or request_managed_bot.",
+        name: :button,
+        required: true,
+        type: Telegex.Type.KeyboardButton
+      }
+    ],
+    Telegex.Type.PreparedKeyboardButton
+  )
+
+  defmethod(
     "editMessageText",
-    "Use this method to edit text and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.",
+    "Use this method to edit text, rich and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.",
     [
       %{
         description:
@@ -4704,29 +5638,30 @@ defmodule Telegex do
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.",
         name: :chat_id,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Identifier of the message to edit",
+          "Required if inline_message_id is not specified. Identifier of the message to edit.",
         name: :message_id,
         required: false,
         type: :integer
       },
       %{
         description:
-          "Required if chat_id and message_id are not specified. Identifier of the inline message",
+          "Required if chat_id and message_id are not specified. Identifier of the inline message.",
         name: :inline_message_id,
         required: false,
         type: :string
       },
       %{
-        description: "New text of the message, 1-4096 characters after entities parsing",
+        description:
+          "New text of the message, 1-4096 characters after entity parsing; required if rich_message isn't specified",
         name: :text,
-        required: true,
+        required: false,
         type: :string
       },
       %{
@@ -4750,7 +5685,14 @@ defmodule Telegex do
         type: Telegex.Type.LinkPreviewOptions
       },
       %{
-        description: "A JSON-serialized object for an inline keyboard.",
+        description:
+          "New rich content of the message; required if text isn't specified. Direct upload of new files and explicit upload of files by a URL isn't supported when an inline message is edited.",
+        name: :rich_message,
+        required: false,
+        type: Telegex.Type.InputRichMessage
+      },
+      %{
+        description: "A JSON-serialized object for an inline keyboard",
         name: :reply_markup,
         required: false,
         type: Telegex.Type.InlineKeyboardMarkup
@@ -4772,21 +5714,21 @@ defmodule Telegex do
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.",
         name: :chat_id,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Identifier of the message to edit",
+          "Required if inline_message_id is not specified. Identifier of the message to edit.",
         name: :message_id,
         required: false,
         type: :integer
       },
       %{
         description:
-          "Required if chat_id and message_id are not specified. Identifier of the inline message",
+          "Required if chat_id and message_id are not specified. Identifier of the inline message.",
         name: :inline_message_id,
         required: false,
         type: :string
@@ -4813,13 +5755,13 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True, if the caption must be shown above the message media. Supported only for animation, photo and video messages.",
+          "Pass True if the caption must be shown above the message media. Supported only for animation, photo and video messages.",
         name: :show_caption_above_media,
         required: false,
         type: :boolean
       },
       %{
-        description: "A JSON-serialized object for an inline keyboard.",
+        description: "A JSON-serialized object for an inline keyboard",
         name: :reply_markup,
         required: false,
         type: Telegex.Type.InlineKeyboardMarkup
@@ -4830,7 +5772,7 @@ defmodule Telegex do
 
   defmethod(
     "editMessageMedia",
-    "Use this method to edit animation, audio, document, photo, or video messages, or to add media to text messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.",
+    "Use this method to edit animation, audio, document, live photo, photo, or video messages, or to replace a text or a rich message with a media. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo, a live photo, or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.",
     [
       %{
         description:
@@ -4841,33 +5783,33 @@ defmodule Telegex do
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.",
         name: :chat_id,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Identifier of the message to edit",
+          "Required if inline_message_id is not specified. Identifier of the message to edit.",
         name: :message_id,
         required: false,
         type: :integer
       },
       %{
         description:
-          "Required if chat_id and message_id are not specified. Identifier of the inline message",
+          "Required if chat_id and message_id are not specified. Identifier of the inline message.",
         name: :inline_message_id,
         required: false,
         type: :string
       },
       %{
-        description: "A JSON-serialized object for a new media content of the message",
+        description: "A JSON-serialized object for the new media content of the message",
         name: :media,
         required: true,
         type: Telegex.Type.InputMedia
       },
       %{
-        description: "A JSON-serialized object for a new inline keyboard.",
+        description: "A JSON-serialized object for a new inline keyboard",
         name: :reply_markup,
         required: false,
         type: Telegex.Type.InlineKeyboardMarkup
@@ -4889,21 +5831,21 @@ defmodule Telegex do
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.",
         name: :chat_id,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Identifier of the message to edit",
+          "Required if inline_message_id is not specified. Identifier of the message to edit.",
         name: :message_id,
         required: false,
         type: :integer
       },
       %{
         description:
-          "Required if chat_id and message_id are not specified. Identifier of the inline message",
+          "Required if chat_id and message_id are not specified. Identifier of the inline message.",
         name: :inline_message_id,
         required: false,
         type: :string
@@ -4912,7 +5854,7 @@ defmodule Telegex do
       %{description: "Longitude of new location", name: :longitude, required: true, type: :float},
       %{
         description:
-          "New period in seconds during which the location can be updated, starting from the message send date. If 0x7FFFFFFF is specified, then the location can be updated forever. Otherwise, the new value must not exceed the current live_period by more than a day, and the live location expiration date must remain within the next 90 days. If not specified, then live_period remains unchanged",
+          "New period in seconds during which the location can be updated, starting from the message send date. If 0x7FFFFFFF is specified, then the location can be updated forever. Otherwise, the new value must not exceed the current live_period by more than a day, and the live location expiration date must remain within the next 90 days. If not specified, then live_period remains unchanged.",
         name: :live_period,
         required: false,
         type: :integer
@@ -4938,7 +5880,7 @@ defmodule Telegex do
         type: :integer
       },
       %{
-        description: "A JSON-serialized object for a new inline keyboard.",
+        description: "A JSON-serialized object for a new inline keyboard",
         name: :reply_markup,
         required: false,
         type: Telegex.Type.InlineKeyboardMarkup
@@ -4960,27 +5902,27 @@ defmodule Telegex do
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.",
         name: :chat_id,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Identifier of the message with live location to stop",
+          "Required if inline_message_id is not specified. Identifier of the message with live location to stop.",
         name: :message_id,
         required: false,
         type: :integer
       },
       %{
         description:
-          "Required if chat_id and message_id are not specified. Identifier of the inline message",
+          "Required if chat_id and message_id are not specified. Identifier of the inline message.",
         name: :inline_message_id,
         required: false,
         type: :string
       },
       %{
-        description: "A JSON-serialized object for a new inline keyboard.",
+        description: "A JSON-serialized object for a new inline keyboard",
         name: :reply_markup,
         required: false,
         type: Telegex.Type.InlineKeyboardMarkup
@@ -5001,10 +5943,11 @@ defmodule Telegex do
         type: :string
       },
       %{
-        description: "Unique identifier for the target chat",
+        description:
+          "Unique identifier for the target chat or username of the target bot in the format @username",
         name: :chat_id,
         required: true,
-        type: :integer
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description: "Unique identifier for the target message",
@@ -5041,27 +5984,27 @@ defmodule Telegex do
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.",
         name: :chat_id,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Identifier of the message to edit",
+          "Required if inline_message_id is not specified. Identifier of the message to edit.",
         name: :message_id,
         required: false,
         type: :integer
       },
       %{
         description:
-          "Required if chat_id and message_id are not specified. Identifier of the inline message",
+          "Required if chat_id and message_id are not specified. Identifier of the inline message.",
         name: :inline_message_id,
         required: false,
         type: :string
       },
       %{
-        description: "A JSON-serialized object for an inline keyboard.",
+        description: "A JSON-serialized object for an inline keyboard",
         name: :reply_markup,
         required: false,
         type: Telegex.Type.InlineKeyboardMarkup
@@ -5083,7 +6026,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -5095,13 +6038,211 @@ defmodule Telegex do
         type: :integer
       },
       %{
-        description: "A JSON-serialized object for a new message inline keyboard.",
+        description: "A JSON-serialized object for a new message inline keyboard",
         name: :reply_markup,
         required: false,
         type: Telegex.Type.InlineKeyboardMarkup
       }
     ],
     Telegex.Type.Poll
+  )
+
+  defmethod(
+    "editEphemeralMessageText",
+    "Use this method to edit an ephemeral text or rich message. Note that it is not guaranteed that the user will receive the message edit event, especially if they are offline. On success, True is returned.",
+    [
+      %{
+        description:
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
+        name: :chat_id,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description: "Identifier of the user who received the message",
+        name: :receiver_user_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "Identifier of the ephemeral message to edit",
+        name: :ephemeral_message_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description:
+          "New text of the message, 1-4096 characters after entity parsing; required if rich_message isn't specified",
+        name: :text,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "Mode for parsing entities in the message text. See formatting options for more details.",
+        name: :parse_mode,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode",
+        name: :entities,
+        required: false,
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
+      },
+      %{
+        description: "New rich content of the message; required if text isn't specified",
+        name: :rich_message,
+        required: false,
+        type: Telegex.Type.InputRichMessage
+      },
+      %{
+        description: "Link preview generation options for the message",
+        name: :link_preview_options,
+        required: false,
+        type: Telegex.Type.LinkPreviewOptions
+      },
+      %{
+        description: "A JSON-serialized object for an inline keyboard",
+        name: :reply_markup,
+        required: false,
+        type: Telegex.Type.InlineKeyboardMarkup
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
+    "editEphemeralMessageMedia",
+    "Use this method to edit the media of an ephemeral message. Note that it is not guaranteed that the user will receive the message edit event, especially if they are offline. On success, True is returned.",
+    [
+      %{
+        description:
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
+        name: :chat_id,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description: "Identifier of the user who received the message",
+        name: :receiver_user_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "Identifier of the ephemeral message to edit",
+        name: :ephemeral_message_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "A JSON-serialized object for the new media content of the message",
+        name: :media,
+        required: true,
+        type: Telegex.Type.InputMedia
+      },
+      %{
+        description: "A JSON-serialized object for an inline keyboard",
+        name: :reply_markup,
+        required: false,
+        type: Telegex.Type.InlineKeyboardMarkup
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
+    "editEphemeralMessageCaption",
+    "Use this method to edit the caption of an ephemeral message. Note that it is not guaranteed that the user will receive the message edit event, especially if they are offline. On success, True is returned.",
+    [
+      %{
+        description:
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
+        name: :chat_id,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description: "Identifier of the user who received the message",
+        name: :receiver_user_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "Identifier of the ephemeral message to edit",
+        name: :ephemeral_message_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "New caption of the message, 0-1024 characters after entities parsing",
+        name: :caption,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "Mode for parsing entities in the message caption. See formatting options for more details.",
+        name: :parse_mode,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode",
+        name: :caption_entities,
+        required: false,
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
+      },
+      %{
+        description:
+          "Pass True if the caption must be shown above the message media. Supported only for animation, photo and video messages.",
+        name: :show_caption_above_media,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description: "A JSON-serialized object for an inline keyboard",
+        name: :reply_markup,
+        required: false,
+        type: Telegex.Type.InlineKeyboardMarkup
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
+    "editEphemeralMessageReplyMarkup",
+    "Use this method to edit only the reply markup of an ephemeral message. Note that it is not guaranteed that the user will receive the message edit event, especially if they are offline. On success, True is returned.",
+    [
+      %{
+        description:
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
+        name: :chat_id,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description: "Identifier of the user who received the message",
+        name: :receiver_user_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "Identifier of the ephemeral message to edit",
+        name: :ephemeral_message_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "A JSON-serialized object for an inline keyboard",
+        name: :reply_markup,
+        required: false,
+        type: Telegex.Type.InlineKeyboardMarkup
+      }
+    ],
+    :boolean
   )
 
   defmethod(
@@ -5122,7 +6263,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Point in time (Unix timestamp) when the post is expected to be published; omit if the date has already been specified when the suggested post was created. If specified, then the date must be not more than 2678400 seconds (30 days) in the future",
+          "Point in time (Unix timestamp) when the post is expected to be published; omit if the date has already been specified when the suggested post was created. If specified, then the date must be not more than 2678400 seconds (30 days) in the future.",
         name: :send_date,
         required: false,
         type: :integer
@@ -5159,21 +6300,11 @@ defmodule Telegex do
 
   defmethod(
     "deleteMessage",
-    "Use this method to delete a message, including service messages, with the following limitations:
-- A message can only be deleted if it was sent less than 48 hours ago.
-- Service messages about a supergroup, channel, or forum topic creation can't be deleted.
-- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.
-- Bots can delete outgoing messages in private chats, groups, and supergroups.
-- Bots can delete incoming messages in private chats.
-- Bots granted can_post_messages permissions can delete outgoing messages in channels.
-- If the bot is an administrator of a group, it can delete any message there.
-- If the bot has can_delete_messages administrator right in a supergroup or a channel, it can delete any message there.
-- If the bot has can_manage_direct_messages administrator right in a channel, it can delete any message in the corresponding direct messages chat.
-Returns True on success.",
+    "Use this method to delete a message, including service messages, with the following limitations:\n- A message can only be deleted if it was sent less than 48 hours ago.\n- Service messages about a supergroup, channel, or forum topic creation can't be deleted.\n- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.\n- Bots can delete outgoing messages in private chats, groups, and supergroups.\n- Bots can delete incoming messages in private chats.\n- Bots granted can_post_messages permissions can delete outgoing messages in channels.\n- If the bot is an administrator of a group, it can delete any message there.\n- If the bot has can_delete_messages administrator right in a supergroup or a channel, it can delete any message there.\n- If the bot has can_manage_direct_messages administrator right in a channel, it can delete any message in the corresponding direct messages chat.\nReturns True on success.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
@@ -5194,17 +6325,108 @@ Returns True on success.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "A JSON-serialized list of 1-100 identifiers of messages to delete. See deleteMessage for limitations on which messages can be deleted",
+          "A JSON-serialized list of 1-100 identifiers of messages to delete. See deleteMessage for limitations on which messages can be deleted.",
         name: :message_ids,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :integer}
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
+    "deleteEphemeralMessage",
+    "Use this method to delete an ephemeral message. Note that it is not guaranteed that the user will receive the message deletion event, especially if they are offline. Returns True on success.",
+    [
+      %{
+        description:
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
+        name: :chat_id,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description: "Identifier of the user who received the message",
+        name: :receiver_user_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "Identifier of the ephemeral message to delete",
+        name: :ephemeral_message_id,
+        required: true,
+        type: :integer
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
+    "deleteMessageReaction",
+    "Use this method to remove a reaction from a message in a group or a supergroup chat. The bot must have the 'can_delete_messages' administrator right in the chat. Returns True on success.",
+    [
+      %{
+        description:
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
+        name: :chat_id,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description: "Identifier of the target message",
+        name: :message_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description:
+          "Identifier of the user whose reaction will be removed, if the reaction was added by a user",
+        name: :user_id,
+        required: false,
+        type: :integer
+      },
+      %{
+        description:
+          "Identifier of the chat whose reaction will be removed, if the reaction was added by a chat",
+        name: :actor_chat_id,
+        required: false,
+        type: :integer
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
+    "deleteAllMessageReactions",
+    "Use this method to remove up to 10000 recent reactions in a group or a supergroup chat added by a given user or chat. The bot must have the 'can_delete_messages' administrator right in the chat. Returns True on success.",
+    [
+      %{
+        description:
+          "Unique identifier for the target chat or username of the target supergroup in the format @username",
+        name: :chat_id,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description:
+          "Identifier of the user whose reactions will be removed, if the reactions were added by a user",
+        name: :user_id,
+        required: false,
+        type: :integer
+      },
+      %{
+        description:
+          "Identifier of the chat whose reactions will be removed, if the reactions were added by a chat",
+        name: :actor_chat_id,
+        required: false,
+        type: :integer
       }
     ],
     :boolean
@@ -5223,14 +6445,14 @@ Returns True on success.",
       },
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -5241,6 +6463,13 @@ Returns True on success.",
         name: :direct_messages_topic_id,
         required: false,
         type: :integer
+      },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the ephemeral message to send",
+        name: :ephemeral_message_parameters,
+        required: false,
+        type: Telegex.Type.EphemeralMessageParameters
       },
       %{
         description:
@@ -5273,7 +6502,7 @@ Returns True on success.",
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -5300,7 +6529,7 @@ Returns True on success.",
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -5614,7 +6843,7 @@ Returns True on success.",
       %{description: "Sticker set name", name: :name, required: true, type: :string},
       %{
         description:
-          "Custom emoji identifier of a sticker from the sticker set; pass an empty string to drop the thumbnail and use the first sticker as the thumbnail.",
+          "Custom emoji identifier of a sticker from the sticker set; pass an empty string to drop the thumbnail and use the first sticker as the thumbnail",
         name: :custom_emoji_id,
         required: false,
         type: :string
@@ -5631,9 +6860,160 @@ Returns True on success.",
   )
 
   defmethod(
+    "sendRichMessage",
+    "Use this method to send rich messages. If the message contains a block with a media element, then the bot must have the right to send the media to the chat. On success, the sent Message is returned.",
+    [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent. Bot can send rich messages on behalf of a business account only if the corresponding user can send rich messages.",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
+        name: :chat_id,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description:
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
+        name: :message_thread_id,
+        required: false,
+        type: :integer
+      },
+      %{
+        description:
+          "Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat",
+        name: :direct_messages_topic_id,
+        required: false,
+        type: :integer
+      },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the ephemeral message to send",
+        name: :ephemeral_message_parameters,
+        required: false,
+        type: Telegex.Type.EphemeralMessageParameters
+      },
+      %{
+        description: "The message to be sent",
+        name: :rich_message,
+        required: true,
+        type: Telegex.Type.InputRichMessage
+      },
+      %{
+        description:
+          "Sends the message silently. Users will receive a notification with no sound.",
+        name: :disable_notification,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description: "Protects the contents of the sent message from forwarding and saving",
+        name: :protect_content,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
+        name: :allow_paid_broadcast,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.",
+        name: :suggested_post_parameters,
+        required: false,
+        type: Telegex.Type.SuggestedPostParameters
+      },
+      %{
+        description: "Description of the message to reply to",
+        name: :reply_parameters,
+        required: false,
+        type: Telegex.Type.ReplyParameters
+      },
+      %{
+        description:
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.",
+        name: :reply_markup,
+        required: false,
+        type: %{
+          __struct__: Telegex.TypeDefiner.UnionType,
+          types: [
+            Telegex.Type.InlineKeyboardMarkup,
+            Telegex.Type.ReplyKeyboardMarkup,
+            Telegex.Type.ReplyKeyboardRemove,
+            Telegex.Type.ForceReply
+          ]
+        }
+      }
+    ],
+    Telegex.Type.Message
+  )
+
+  defmethod(
+    "sendRichMessageDraft",
+    "Use this method to stream a partial rich message to a user while the message is being generated. Note that the streamed draft is ephemeral and acts as a temporary 30-second preview - once the output is finalized, you must call sendRichMessage with the complete message to persist it in the user's chat. Returns True on success.",
+    [
+      %{
+        description: "Unique identifier for the target private chat",
+        name: :chat_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "Unique identifier for the target message thread",
+        name: :message_thread_id,
+        required: false,
+        type: :integer
+      },
+      %{
+        description:
+          "Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated. Otherwise, the draft is replaced without animation.",
+        name: :draft_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description:
+          "The partial message to be streamed. Direct upload of new files and explicit upload of files by a URL isn't supported.",
+        name: :rich_message,
+        required: true,
+        type: Telegex.Type.InputRichMessage
+      },
+      %{
+        description:
+          "Pass True to show the user a button to stop further drafts. The bot will receive an Update “stopped_message_generation” if the user presses the button.",
+        name: :can_stop,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Pass True to keep the draft in the chat when the button is pressed. The draft will still disappear after a short time or if the bot sends a message. To fully preserve the partial draft, the bot should send it as a new message.",
+        name: :keep_on_stop,
+        required: false,
+        type: :boolean
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
     "answerInlineQuery",
-    "Use this method to send answers to an inline query. On success, True is returned.
-No more than 50 results per query are allowed.",
+    "Use this method to send answers to an inline query. On success, True is returned.\nNo more than 50 results per query are allowed.",
     [
       %{
         description: "Unique identifier for the answered query",
@@ -5642,7 +7022,7 @@ No more than 50 results per query are allowed.",
         type: :string
       },
       %{
-        description: "A JSON-serialized array of results for the inline query",
+        description: "A JSON-serialized Array of results for the inline query",
         name: :results,
         required: true,
         type: %{
@@ -5683,83 +7063,19 @@ No more than 50 results per query are allowed.",
   )
 
   defmethod(
-    "answerWebAppQuery",
-    "Use this method to set the result of an interaction with a Web App and send a corresponding message on behalf of the user to the chat from which the query originated. On success, a SentWebAppMessage object is returned.",
-    [
-      %{
-        description: "Unique identifier for the query to be answered",
-        name: :web_app_query_id,
-        required: true,
-        type: :string
-      },
-      %{
-        description: "A JSON-serialized object describing the message to be sent",
-        name: :result,
-        required: true,
-        type: Telegex.Type.InlineQueryResult
-      }
-    ],
-    Telegex.Type.SentWebAppMessage
-  )
-
-  defmethod(
-    "savePreparedInlineMessage",
-    "Stores a message that can be sent by a user of a Mini App. Returns a PreparedInlineMessage object.",
-    [
-      %{
-        description: "Unique identifier of the target user that can use the prepared message",
-        name: :user_id,
-        required: true,
-        type: :integer
-      },
-      %{
-        description: "A JSON-serialized object describing the message to be sent",
-        name: :result,
-        required: true,
-        type: Telegex.Type.InlineQueryResult
-      },
-      %{
-        description: "Pass True if the message can be sent to private chats with users",
-        name: :allow_user_chats,
-        required: false,
-        type: :boolean
-      },
-      %{
-        description: "Pass True if the message can be sent to private chats with bots",
-        name: :allow_bot_chats,
-        required: false,
-        type: :boolean
-      },
-      %{
-        description: "Pass True if the message can be sent to group and supergroup chats",
-        name: :allow_group_chats,
-        required: false,
-        type: :boolean
-      },
-      %{
-        description: "Pass True if the message can be sent to channel chats",
-        name: :allow_channel_chats,
-        required: false,
-        type: :boolean
-      }
-    ],
-    Telegex.Type.PreparedInlineMessage
-  )
-
-  defmethod(
     "sendInvoice",
     "Use this method to send invoices. On success, the sent Message is returned.",
     [
       %{
         description:
-          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+          "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -5820,14 +7136,14 @@ No more than 50 results per query are allowed.",
       },
       %{
         description:
-          "A JSON-serialized array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.",
+          "A JSON-serialized Array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.",
         name: :suggested_tip_amounts,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :integer}
       },
       %{
         description:
-          "Unique deep-linking parameter. If left empty, forwarded copies of the sent message will have a Pay button, allowing multiple users to pay directly from the forwarded message, using the same invoice. If non-empty, forwarded copies of the sent message will have a URL button with a deep link to the bot (instead of a Pay button), with the value used as the start parameter",
+          "Unique deep-linking parameter. If left empty, forwarded copies of the sent message will have a Pay button, allowing multiple users to pay directly from the forwarded message, using the same invoice. If non-empty, forwarded copies of the sent message will have a URL button with a deep link to the bot (instead of a Pay button), with the value used as the start parameter.",
         name: :start_parameter,
         required: false,
         type: :string
@@ -5913,7 +7229,7 @@ No more than 50 results per query are allowed.",
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -6016,7 +7332,7 @@ No more than 50 results per query are allowed.",
       },
       %{
         description:
-          "A JSON-serialized array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.",
+          "A JSON-serialized Array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.",
         name: :suggested_tip_amounts,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :integer}
@@ -6110,7 +7426,7 @@ No more than 50 results per query are allowed.",
       },
       %{
         description:
-          "Required if ok is True. A JSON-serialized array of available shipping options.",
+          "Required if ok is True. A JSON-serialized Array of available shipping options.",
         name: :shipping_options,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.ShippingOption}
@@ -6235,7 +7551,7 @@ No more than 50 results per query are allowed.",
     [
       %{description: "User identifier", name: :user_id, required: true, type: :integer},
       %{
-        description: "A JSON-serialized array describing the errors",
+        description: "A JSON-serialized Array describing the errors",
         name: :errors,
         required: true,
         type: %{
@@ -6260,14 +7576,14 @@ No more than 50 results per query are allowed.",
       },
       %{
         description:
-          "Unique identifier for the target chat. Games can't be sent to channel direct messages chats and channel chats.",
+          "Unique identifier for the target chat or username of the target bot in the format @username. Games can't be sent to channel direct messages chats and channel chats.",
         name: :chat_id,
         required: true,
-        type: :integer
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
         description:
-          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+          "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -6294,7 +7610,7 @@ No more than 50 results per query are allowed.",
       },
       %{
         description:
-          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance",
+          "Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
         name: :allow_paid_broadcast,
         required: false,
         type: :boolean
@@ -6336,7 +7652,7 @@ No more than 50 results per query are allowed.",
       },
       %{
         description:
-          "Pass True if the high score is allowed to decrease. This can be useful when fixing mistakes or banning cheaters",
+          "Pass True if the high score is allowed to decrease. This can be useful when fixing mistakes or banning cheaters.",
         name: :force,
         required: false,
         type: :boolean
@@ -6350,21 +7666,21 @@ No more than 50 results per query are allowed.",
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Unique identifier for the target chat",
+          "Required if inline_message_id is not specified. Unique identifier for the target chat.",
         name: :chat_id,
         required: false,
         type: :integer
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Identifier of the sent message",
+          "Required if inline_message_id is not specified. Identifier of the sent message.",
         name: :message_id,
         required: false,
         type: :integer
       },
       %{
         description:
-          "Required if chat_id and message_id are not specified. Identifier of the inline message",
+          "Required if chat_id and message_id are not specified. Identifier of the inline message.",
         name: :inline_message_id,
         required: false,
         type: :string
@@ -6380,21 +7696,21 @@ No more than 50 results per query are allowed.",
       %{description: "Target user id", name: :user_id, required: true, type: :integer},
       %{
         description:
-          "Required if inline_message_id is not specified. Unique identifier for the target chat",
+          "Required if inline_message_id is not specified. Unique identifier for the target chat.",
         name: :chat_id,
         required: false,
         type: :integer
       },
       %{
         description:
-          "Required if inline_message_id is not specified. Identifier of the sent message",
+          "Required if inline_message_id is not specified. Identifier of the sent message.",
         name: :message_id,
         required: false,
         type: :integer
       },
       %{
         description:
-          "Required if chat_id and message_id are not specified. Identifier of the inline message",
+          "Required if chat_id and message_id are not specified. Identifier of the inline message.",
         name: :inline_message_id,
         required: false,
         type: :string

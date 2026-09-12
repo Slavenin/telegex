@@ -4,6 +4,6 @@ defmodule Telegex do
   use Telegex.MethodDefiner
 
   <%= for api <- @apis do %>
-    defmethod("<%= api.name %>", "<%= api.description %>", <%= api.parameters %>, <%= api.result_type %>)
+    defmethod(<%= inspect(api.name) %>, <%= inspect(api.description) %>, <%= api.parameters %>, <%= api.result_type %>)
   <% end %>
 end

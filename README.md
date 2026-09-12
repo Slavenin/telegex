@@ -11,6 +11,16 @@ A new Telegram bot framework, which is also a perfect Bot API client library.
 
 _All API functions, comments, types (structures and specifications) of Telegex are generated from documents. I parse the documents into structured data and publish it on [telegex/api_doc.json](https://github.com/telegex/api_doc.json)._
 
+## Updating Telegram Bot API bindings
+
+Run the generator in the development environment:
+
+```bash
+MIX_ENV=dev mix api.upgrade
+```
+
+The task downloads the current Bot API documentation, parses its sections, regenerates `lib/telegex.ex` and `lib/telegex/type.ex`, and formats the result. Commit changes to the generator together with both generated modules.
+
 ## Introduction
 
 Telegex is not only a client for Bot API, but also a framework for building bots. It provides convenient support for receiving updates and implements an advanced processing model based on "chains".
