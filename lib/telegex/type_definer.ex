@@ -126,7 +126,7 @@ defmodule Telegex.TypeDefiner do
 
     fields_ast = Enum.map(quoted_fields, &gen_field_ast/1)
     field_names = Enum.map(quoted_fields, fn f -> f.name end)
-    attachment_field_names = build_attachment_field_names(quoted_fields)
+    direct_attachment_field_names = build_direct_attachment_field_names(quoted_fields)
 
     references =
       if Enum.empty?(quoted_fields) do
@@ -147,8 +147,19 @@ defmodule Telegex.TypeDefiner do
         def __references__, do: unquote(references)
         # 存储所有字段的列表
         def __keys__, do: unquote(field_names)
-        # 存储附件类型的字段列表
-        def __attachments__, do: unquote(attachment_field_names)
+        # 存储直接或嵌套类型中包含附件的字段列表
+        def __direct_attachments__, do: unquote(direct_attachment_field_names)
+
+        def __attachments__ do
+          nested_attachment_fields =
+            __references__()
+            |> Enum.filter(fn {_name, type} ->
+              Telegex.TypeDefiner.attachment_type?(type)
+            end)
+            |> Enum.map(&elem(&1, 0))
+
+          Enum.uniq(__direct_attachments__() ++ nested_attachment_fields)
+        end
 
         typedstruct do
           unquote(fields_ast)
@@ -177,35 +188,78 @@ defmodule Telegex.TypeDefiner do
   end
 
   def reference?(type) when is_struct(type, UnionType) do
-    Enum.find(type.types, &reference?/1) == true
+    Enum.any?(type.types, &reference?/1)
   end
 
   def reference?(type) when is_atom(type) do
     true
   end
 
-  defp build_attachment_field_names(fields) do
+  defp build_direct_attachment_field_names(fields) do
     fields
-    |> Enum.filter(fn f -> attachment_type?(f.type) || attachment_description?(f.description) end)
+    |> Enum.filter(fn f ->
+      direct_attachment_type?(f.type) || attachment_description?(f.description)
+    end)
     |> Enum.map(fn f -> f.name end)
   end
 
   @doc """
   判断类型是否为附件类型。
   """
-  def attachment_type?(Telegex.Type.InputFile) do
-    true
+  def attachment_type?(type), do: attachment_type?(type, MapSet.new())
+
+  defp attachment_type?(Telegex.Type.InputFile, _visited), do: true
+
+  defp attachment_type?(type, _visited)
+       when type in [:integer, :string, :boolean, :float],
+       do: false
+
+  defp attachment_type?(%UnionType{types: types}, visited) do
+    Enum.any?(types, &attachment_type?(&1, visited))
   end
 
-  def attachment_type?(%UnionType{types: types}) do
-    Enum.find(types, &attachment_type?/1) != nil
+  defp attachment_type?(%ArrayType{elem_type: type}, visited) do
+    attachment_type?(type, visited)
   end
 
-  def attachment_type?(%ArrayType{elem_type: type}) do
-    attachment_type?(type)
+  defp attachment_type?(module, visited) when is_atom(module) do
+    if MapSet.member?(visited, module) do
+      false
+    else
+      visited = MapSet.put(visited, module)
+      Code.ensure_loaded(module)
+
+      direct_attachments =
+        function_exported?(module, :__direct_attachments__, 0) &&
+          !Enum.empty?(module.__direct_attachments__())
+
+      nested_attachments =
+        function_exported?(module, :__references__, 0) &&
+          Enum.any?(module.__references__(), fn {_name, type} ->
+            attachment_type?(type, visited)
+          end)
+
+      union_attachments =
+        function_exported?(module, :__types__, 0) &&
+          Enum.any?(module.__types__(), &attachment_type?(&1, visited))
+
+      direct_attachments || nested_attachments || union_attachments
+    end
   end
 
-  def attachment_type?(_), do: false
+  defp attachment_type?(_type, _visited), do: false
+
+  defp direct_attachment_type?(Telegex.Type.InputFile), do: true
+
+  defp direct_attachment_type?(%UnionType{types: types}) do
+    Enum.any?(types, &direct_attachment_type?/1)
+  end
+
+  defp direct_attachment_type?(%ArrayType{elem_type: type}) do
+    direct_attachment_type?(type)
+  end
+
+  defp direct_attachment_type?(_type), do: false
 
   def attachment_description?(description) when is_binary(description) do
     String.contains?(description, "attach://<file_attach_name>")
@@ -214,7 +268,8 @@ defmodule Telegex.TypeDefiner do
   def attachment_description?(_description), do: false
 
   defmacro defunion(name, description, types, opts \\ []) do
-    types_ast = Enum.map(types, fn type -> field_type_ast(type) end)
+    quoted_types = quoted(types, __CALLER__)
+    types_ast = Enum.map(quoted_types, &field_type_ast/1)
 
     discriminant = Keyword.get(opts, :discriminant, nil)
 
@@ -224,6 +279,7 @@ defmodule Telegex.TypeDefiner do
 
         def __meta__, do: :union
         def __discriminant__, do: unquote(discriminant)
+        def __types__, do: unquote(Macro.escape(quoted_types))
 
         @type t :: unquote(types_to_union(types_ast))
       end

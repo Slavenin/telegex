@@ -24,4 +24,28 @@ defmodule Telegex.Caller.Adapter.FinchTest do
              ]
            ]
   end
+
+  test "attach_param/4 rewrites a photo nested in a rich message" do
+    rich_message = %Telegex.Type.InputRichMessage{
+      blocks: [
+        %Telegex.Type.InputRichBlockPhoto{
+          type: "photo",
+          photo: %Telegex.Type.InputMediaPhoto{type: "photo", media: "mix.exs"}
+        }
+      ]
+    }
+
+    {_multipart, params} =
+      attach_param(:rich_message, rich_message, Multipart.new(), rich_message: rich_message)
+
+    assert [
+             rich_message: %Telegex.Type.InputRichMessage{
+               blocks: [
+                 %Telegex.Type.InputRichBlockPhoto{
+                   photo: %Telegex.Type.InputMediaPhoto{media: "attach://mix.exs"}
+                 }
+               ]
+             }
+           ] = params
+  end
 end

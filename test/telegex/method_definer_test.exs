@@ -20,5 +20,6 @@ defmodule Telegex.MethodDefinerTest do
     }
 
     assert include_attachment?(type) == true
+    assert include_attachment?(Telegex.Type.InputRichMessage) == true
   end
 end

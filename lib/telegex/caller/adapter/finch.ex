@@ -130,7 +130,7 @@ defmodule Telegex.Caller.Adapter.Finch do
     # 将结构类型的参数值自身作为参数，并获得重写后的结构参数
     {multipart, value} = attach_struct(value, multipart)
     # 重写参数值
-    params = Keyword.put(params, field, value)
+    params = put_param(params, field, value)
 
     {multipart, params}
   end
@@ -144,7 +144,7 @@ defmodule Telegex.Caller.Adapter.Finch do
       end)
 
     # 重写字段的值
-    params = Keyword.put(params, field, value)
+    params = put_param(params, field, value)
 
     {multipart, params}
   end
@@ -163,6 +163,12 @@ defmodule Telegex.Caller.Adapter.Finch do
       {multipart, value}
     end
   end
+
+  defp put_param(params, field, value) when is_list(params),
+    do: Keyword.put(params, field, value)
+
+  defp put_param(params, field, value) when is_map(params),
+    do: Map.put(params, field, value)
 
   defp add_other_param_parts(multipart, without_attachments_params) do
     Enum.reduce(without_attachments_params, multipart, fn {key, value}, updated_multipart ->

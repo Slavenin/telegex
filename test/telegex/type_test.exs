@@ -8,4 +8,10 @@ defmodule Telegex.TypeTest do
     assert Telegex.Type.InputMediaAudio.__attachments__() == [:media, :thumbnail]
     assert Telegex.Type.InputMediaDocument.__attachments__() == [:media, :thumbnail]
   end
+
+  test "attachment fields propagate through nested rich message types" do
+    assert Keyword.has_key?(Telegex.Type.InputRichMessageMedia.__references__(), :media)
+    assert Telegex.Type.InputRichBlockPhoto.__attachments__() == [:photo]
+    assert Telegex.Type.InputRichMessage.__attachments__() == [:blocks, :media]
+  end
 end
