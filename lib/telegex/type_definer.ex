@@ -207,11 +207,11 @@ defmodule Telegex.TypeDefiner do
 
   def attachment_type?(_), do: false
 
-  def attachment_description?(<<"File to send. Pass a file_id to send" <> _rest::binary>>) do
-    true
+  def attachment_description?(description) when is_binary(description) do
+    String.contains?(description, "attach://<file_attach_name>")
   end
 
-  def attachment_description?(_), do: false
+  def attachment_description?(_description), do: false
 
   defmacro defunion(name, description, types, opts \\ []) do
     types_ast = Enum.map(types, fn type -> field_type_ast(type) end)

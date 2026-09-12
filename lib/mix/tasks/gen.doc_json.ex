@@ -14,6 +14,7 @@ if Mix.env() in [:dev, :test] do
       "Available methods",
       "Updating messages",
       "Stickers",
+      "Rich messages",
       "Inline mode",
       "Payments",
       "Telegram Passport",
@@ -46,6 +47,7 @@ if Mix.env() in [:dev, :test] do
       methods_section = Enum.find(doc_sections, &(&1.title == "Available methods"))
       updating_section = Enum.find(doc_sections, &(&1.title == "Updating messages"))
       stickers_section = Enum.find(doc_sections, &(&1.title == "Stickers"))
+      rich_section = Enum.find(doc_sections, &(&1.title == "Rich messages"))
       passport_section = Enum.find(doc_sections, &(&1.title == "Telegram Passport"))
       games_section = Enum.find(doc_sections, &(&1.title == "Games"))
 
@@ -54,6 +56,7 @@ if Mix.env() in [:dev, :test] do
       inline_sub_sections = parse_sub_sections(inline_section, doc_nodes)
       payments_sub_sections = parse_sub_sections(payments_section, doc_nodes)
       stickers_sub_sections = parse_sub_sections(stickers_section, doc_nodes)
+      rich_sub_sections = parse_sub_sections(rich_section, doc_nodes)
       passport_sub_sections = parse_sub_sections(passport_section, doc_nodes)
       games_sub_sections = parse_sub_sections(games_section, doc_nodes)
 
@@ -72,6 +75,11 @@ if Mix.env() in [:dev, :test] do
       stickers_types =
         stickers_sub_sections
         # 排除非类型的子章节
+        |> Enum.filter(&(&1.comment == :type))
+        |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
+
+      rich_types =
+        rich_sub_sections
         |> Enum.filter(&(&1.comment == :type))
         |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
 
@@ -108,6 +116,11 @@ if Mix.env() in [:dev, :test] do
       inline_union_types =
         inline_sub_sections
         # 排除非联合类型的子章节
+        |> Enum.filter(&(&1.comment == :union_type))
+        |> Enum.map(fn s -> parse_union_type(s, doc_nodes) end)
+
+      rich_union_types =
+        rich_sub_sections
         |> Enum.filter(&(&1.comment == :union_type))
         |> Enum.map(fn s -> parse_union_type(s, doc_nodes) end)
 
@@ -149,6 +162,11 @@ if Mix.env() in [:dev, :test] do
         |> Enum.filter(&(&1.comment == :method))
         |> Enum.map(fn s -> parse_method(s, doc_nodes) end)
 
+      rich_methods =
+        rich_sub_sections
+        |> Enum.filter(&(&1.comment == :method))
+        |> Enum.map(fn s -> parse_method(s, doc_nodes) end)
+
       inline_methods =
         inline_sub_sections
         # 排除非方法的子章节
@@ -177,19 +195,22 @@ if Mix.env() in [:dev, :test] do
         updates_types ++
           types ++
           stickers_types ++
+          rich_types ++
           inline_types ++
           payments_types ++
           passport_types ++
           game_types
 
       all_union_types =
-        union_types ++ inline_union_types ++ payments_union_types ++ passport_union_types
+        union_types ++
+          rich_union_types ++ inline_union_types ++ payments_union_types ++ passport_union_types
 
       all_methods =
         updates_methods ++
           methods ++
           updating_methods ++
           stickers_methods ++
+          rich_methods ++
           inline_methods ++
           payments_methods ++
           passport_methods ++
@@ -460,7 +481,6 @@ if Mix.env() in [:dev, :test] do
 
       description = nodes |> Floki.find("p") |> hd() |> Floki.text()
 
-      IO.inspect([section.title, description])
       %{
         name: section.title,
         description: description,
@@ -500,6 +520,8 @@ if Mix.env() in [:dev, :test] do
     end
 
     @result_type_re_list [
+      ~r/On success, an (Array of \S+) .+ is returned/,
+      ~r/Returns a ([A-Z]\S+) object\.$/,
       ~r/Returns an (Array of \S+) objects/,
       ~r/On success, a ([A-Z]\S+) object is returned/,
       ~r/(array of \S+) .+is returned/,
