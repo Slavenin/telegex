@@ -63,7 +63,7 @@ defmodule Telegex.MixProject do
       {:ex_doc, "~> 0.34", only: :dev, runtime: false},
       {:httpoison, "~> 2.2", optional: true, only: [:dev, :test]},
       {:finch, "~> 0.19.0", optional: true, only: [:dev, :test]},
-      {:multipart, "~> 0.4.0", optional: true, only: [:dev, :test]},
+      {:multipart, "~> 0.4.0"},
       {:plug, "~> 1.16", optional: true, only: [:dev, :test]},
       {:plug_cowboy, "~> 2.7", optional: true, only: [:dev, :test]},
       {:remote_ip, "~> 1.2", optional: true, only: [:dev, :test]},
