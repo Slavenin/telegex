@@ -6,4 +6,11 @@ defmodule Telegex do
   <%= for api <- @apis do %>
     defmethod(<%= inspect(api.name) %>, <%= inspect(api.description) %>, <%= api.parameters %>, <%= api.result_type %>)
   <% end %>
+
+  @doc "Compatibility overload for callers written before Bot API 10.1 made text optional."
+  @spec edit_message_text(String.t(), keyword()) ::
+          {:ok, Telegex.Type.Message.t() | boolean()} | {:error, Telegex.Type.error()}
+  def edit_message_text(text, optional) when is_binary(text) and is_list(optional) do
+    edit_message_text(Keyword.put(optional, :text, text))
+  end
 end

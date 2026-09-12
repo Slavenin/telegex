@@ -7718,4 +7718,11 @@ defmodule Telegex do
     ],
     %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.GameHighScore}
   )
+
+  @doc "Compatibility overload for callers written before Bot API 10.1 made text optional."
+  @spec edit_message_text(String.t(), keyword()) ::
+          {:ok, Telegex.Type.Message.t() | boolean()} | {:error, Telegex.Type.error()}
+  def edit_message_text(text, optional) when is_binary(text) and is_list(optional) do
+    edit_message_text(Keyword.put(optional, :text, text))
+  end
 end
