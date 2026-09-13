@@ -17,7 +17,7 @@ defmodule Telegex.Caller.Adapter.Finch do
     attachment_fields = Keyword.get(opts, :attachment_fields, [])
 
     build_args =
-      case try_build_multipart(params, attachment_fields) do
+      case build_multipart(params, attachment_fields) do
         :none ->
           json_body = params |> Enum.into(%{}) |> Jason.encode!()
 
@@ -50,11 +50,12 @@ defmodule Telegex.Caller.Adapter.Finch do
     {:error, %RequestError{reason: reason}}
   end
 
-  @spec try_build_multipart(keyword, list) :: {[{String.t(), String.t()}], Enum.t()} | :none
+  @doc false
+  @spec build_multipart(keyword, list) :: {[{String.t(), String.t()}], Enum.t()} | :none
 
-  defp try_build_multipart(_params, []), do: :none
+  def build_multipart(_params, []), do: :none
 
-  defp try_build_multipart(params, attachment_fields),
+  def build_multipart(params, attachment_fields),
     do: _try_build_multipart(params, attachment_fields)
 
   defp _try_build_multipart(params, attachment_fields, i \\ 0, multipart \\ new_multipart()) do
@@ -62,7 +63,9 @@ defmodule Telegex.Caller.Adapter.Finch do
     value = Keyword.get(params, field)
 
     not_exists_field? = is_nil(field)
-    file_exists? = value && File.exists?(value)
+
+    attachable? =
+      (is_binary(value) && File.exists?(value)) || is_map(value) || is_list(value)
 
     cond do
       not_exists_field? && Enum.empty?(multipart.parts) ->
@@ -83,7 +86,7 @@ defmodule Telegex.Caller.Adapter.Finch do
 
         {headers, body_stream}
 
-      !file_exists? ->
+      !attachable? ->
         # 文件不存在，保持原样继续处理下一个附件字段
         _try_build_multipart(params, attachment_fields, i + 1, multipart)
 

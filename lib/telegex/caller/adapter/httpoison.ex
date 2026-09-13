@@ -9,13 +9,27 @@ defmodule Telegex.Caller.Adapter.HTTPoison do
   @impl true
   def call(method, params, opts) do
     url = build_url(method)
-    json_body = params |> Enum.into(%{}) |> Jason.encode!()
+    {body, headers} = build_request(params, opts)
 
-    url |> request(json_body, opts) |> parse_response()
+    url |> request(body, headers) |> parse_response()
   end
 
-  defp request(url, json_body, _opts) do
-    apply(HTTPoison, :post, [url, json_body, [@json_header], options()])
+  @doc false
+  def build_request(params, opts) do
+    attachment_fields = Keyword.get(opts, :attachment_fields, [])
+
+    case Telegex.Caller.Adapter.Finch.build_multipart(params, attachment_fields) do
+      :none ->
+        {params |> Enum.into(%{}) |> Jason.encode!(), [@json_header]}
+
+      {headers, body_stream} ->
+        body = body_stream |> Enum.to_list() |> IO.iodata_to_binary()
+        {body, headers}
+    end
+  end
+
+  defp request(url, body, headers) do
+    apply(HTTPoison, :post, [url, body, headers, options()])
   end
 
   @spec parse_response({:ok, httposion_resp} | {:error, httposion_err}) ::

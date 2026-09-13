@@ -48,4 +48,41 @@ defmodule Telegex.Caller.Adapter.FinchTest do
              }
            ] = params
   end
+
+  test "HTTPoison adapter builds multipart requests for local files" do
+    {body, headers} =
+      Telegex.Caller.Adapter.HTTPoison.build_request(
+        [chat_id: 1, photo: "mix.exs"],
+        attachment_fields: [:photo]
+      )
+
+    assert {"Content-Type", content_type} = List.keyfind(headers, "Content-Type", 0)
+    assert String.starts_with?(content_type, "multipart/form-data")
+    assert body =~ ~s(name="photo")
+    assert body =~ "attach://mix.exs"
+    assert body =~ ~s(name="mix.exs"; filename="mix.exs")
+  end
+
+  test "HTTPoison adapter builds multipart requests for files nested in rich messages" do
+    rich_message = %Telegex.Type.InputRichMessage{
+      blocks: [
+        %Telegex.Type.InputRichBlockPhoto{
+          type: "photo",
+          photo: %Telegex.Type.InputMediaPhoto{type: "photo", media: "mix.exs"}
+        }
+      ]
+    }
+
+    {body, headers} =
+      Telegex.Caller.Adapter.HTTPoison.build_request(
+        [chat_id: 1, rich_message: rich_message],
+        attachment_fields: [:rich_message]
+      )
+
+    assert {"Content-Type", content_type} = List.keyfind(headers, "Content-Type", 0)
+    assert String.starts_with?(content_type, "multipart/form-data")
+    assert body =~ ~s(name="rich_message")
+    assert body =~ "attach://mix.exs"
+    assert body =~ ~s(name="mix.exs"; filename="mix.exs")
+  end
 end
