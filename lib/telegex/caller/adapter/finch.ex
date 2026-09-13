@@ -153,8 +153,10 @@ defmodule Telegex.Caller.Adapter.Finch do
   end
 
   defp attach_struct(value, multipart) do
-    if function_exported?(value.__struct__, :__attachments__, 0) do
-      attachment_fields = value.__struct__.__attachments__()
+    module = value.__struct__
+
+    if Code.ensure_loaded?(module) && function_exported?(module, :__attachments__, 0) do
+      attachment_fields = module.__attachments__()
 
       attach_fun = fn field, {updated_multipart, updated_params} ->
         attach_param(field, Map.get(value, field), updated_multipart, updated_params)
