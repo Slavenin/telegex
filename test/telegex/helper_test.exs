@@ -62,6 +62,14 @@ defmodule Telegex.HelperTest do
 
     assert typedmap(true, %UnionType{types: [:boolean, Message]}) == true
 
+    assert typedmap("plain text", Telegex.Type.RichText) == "plain text"
+
+    assert ["plain text", %Telegex.Type.RichTextBold{text: "bold text"}] =
+             typedmap(
+               ["plain text", %{type: "bold", text: "bold text"}],
+               Telegex.Type.RichText
+             )
+
     typed_data =
       typedmap(
         %{

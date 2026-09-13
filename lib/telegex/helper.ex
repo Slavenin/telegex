@@ -40,6 +40,12 @@ defmodule Telegex.Helper do
   end
 
   # 联合类型根据 discriminant 中字段值执行转换
+  defp _typedmap(:union, values, type) when is_list(values) do
+    Enum.map(values, &typedmap(&1, type))
+  end
+
+  defp _typedmap(:union, value, _type) when not is_map(value), do: value
+
   defp _typedmap(:union, map, type) do
     case type.__discriminant__() do
       nil ->
