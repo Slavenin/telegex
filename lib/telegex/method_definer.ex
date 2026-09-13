@@ -162,7 +162,7 @@ defmodule Telegex.MethodDefiner do
   def include_attachment?(Telegex.Type.InputFile), do: true
 
   def include_attachment?(type) when is_atom(type) do
-    Code.ensure_loaded(type)
+    Code.ensure_compiled(type)
 
     if function_exported?(type, :__attachments__, 0) && !Enum.empty?(type.__attachments__()) do
       true

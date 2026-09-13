@@ -227,7 +227,7 @@ defmodule Telegex.TypeDefiner do
       false
     else
       visited = MapSet.put(visited, module)
-      Code.ensure_loaded(module)
+      Code.ensure_compiled(module)
 
       direct_attachments =
         function_exported?(module, :__direct_attachments__, 0) &&
